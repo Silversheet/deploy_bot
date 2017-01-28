@@ -1,0 +1,36 @@
+deploy_groups:
+  staging:
+    - staging
+  production:
+    - demo
+    - production
+environments:
+  staging:
+    app_name: silver-sheet-staging
+    remote_name: staging
+    pre_deploy_hooks:
+    post_deploy_hooks:
+      - move_trello_cards
+  demo:
+    app_name: silver-sheet-demo
+    remote_name: demo
+    pre_deploy_hooks:
+      - force_master.rb
+      - backup_database.rb
+      - announce_slack.rb
+    post_deploy_hooks:
+      - announce_slack.rb
+      - restart_dynos.rb
+  production:
+    app_name: silver-sheet-production
+    remote_name: production
+    pre_deploy_hooks:
+      - force_master.rb
+      - maintenance_mode.rb
+      - backup_database.rb
+      - announce_slack.rb
+    post_deploy_hooks:
+      - maintenance_mode.rb
+      - announce_slack.rb
+      - restart_dynos.rb
+      - git_tag.rb

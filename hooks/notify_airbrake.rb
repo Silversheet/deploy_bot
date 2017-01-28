@@ -1,0 +1,16 @@
+class DeployHook
+  attr_reader :app_name, :environment, :hook, :remote_name
+
+  def initialize(environment, hook, app_name, remote_name)
+    @environment = environment
+    @hook = hook
+    @app_name = app_name
+    @remote_name = remote_name
+  end
+
+  def run
+    system "heroku run rake airbrake:deploy TO=#{remote_name} --app #{app_name}"
+  end
+end
+
+DeployHook.new(ARGV[0], ARGV[1], ARGV[2], ARGV[3]).run
